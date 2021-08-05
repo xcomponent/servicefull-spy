@@ -1,0 +1,13 @@
+export const stateMachineColor = "rgba(0,0,128,0.45)";
+export const backgroundColor = "LightGrey";
+export const finalStateColor = "Green";
+export const forkTransitionColor = "Green";
+export const TimeoutTransitionColor = "Orange";
+export const transitionColor = "Black";
+export const stateColor = "White";
+export const activeStateColor = "Red";
+export const finalStateInstanceColor = "Red";
+export const fatalErrorStateInstanceColor = "#660000";
+export const entryPointStateColor = "Black";
+export const fatalErrorStateColor = "#660000";
+export const transitionPatternStateColor = "rgba(102,0,204,0.45)";
