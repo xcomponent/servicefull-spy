@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { showSideBar, hideSideBar } from "../actions/sideBar";
 import { XCSpyState } from "../reducers/spyReducer";
 import { routes } from "../utils/routes";
 import { injectIntl, WrappedComponentProps } from "react-intl";
@@ -16,14 +15,11 @@ interface AppHeaderProps extends WrappedComponentProps {
   getStateMachines: (component: string) => string[];
   components: string[];
   autoClear: boolean;
-  sideBar: boolean;
 }
 
 interface AppHeaderCallbackProps {
   returnHome: () => void;
   clearFinalStates: (component: string, stateMachines: string[]) => void;
-  showSideBar: () => void;
-  hideSideBar: () => void;
   snapshotAll: (component: string, stateMachines: string[]) => void;
   setAutoClear: (autoClear: boolean) => void;
 }
@@ -44,7 +40,6 @@ const mapStateToProps = (state: XCSpyState, ownProps: any): AppHeaderProps => {
     },
     components: components,
     autoClear: state.components.autoClear,
-    sideBar: state.sideBar.isVisible,
   };
 };
 
@@ -62,12 +57,6 @@ const mapDispatchToProps = (
         dispatch(clearFinalStates(component, stateMachines[i]));
       }
     },
-    showSideBar: (): void => {
-      dispatch(showSideBar());
-    },
-    hideSideBar: (): void => {
-      dispatch(hideSideBar());
-    },
     snapshotAll: (component: string, stateMachines: string[]): void => {
       dispatch(snapshotAllAction(component, stateMachines));
     },
@@ -80,7 +69,6 @@ const mapDispatchToProps = (
 const AppHeader = ({
   intl,
   returnHome,
-  showSideBar,
   getStateMachines,
   currentComponent,
   snapshotAll,
@@ -88,8 +76,6 @@ const AppHeader = ({
   autoClear,
   setAutoClear,
   components,
-  sideBar,
-  hideSideBar,
 }: AppHeaderGlobalProps) => {
   const menuSpy = (
     <Menu
@@ -114,18 +100,6 @@ const AppHeader = ({
         }}
       >
         {intl.formatMessage({ id: "app.clear.all" })}
-      </Anchor>
-      <Anchor
-        onClick={() => {
-          !sideBar ? showSideBar() : hideSideBar();
-        }}
-      >
-        <CheckBox
-          label={intl.formatMessage({ id: "app.side.bar" })}
-          toggle={true}
-          checked={sideBar}
-          onChange={() => {}}
-        />
       </Anchor>
 
       <Anchor>

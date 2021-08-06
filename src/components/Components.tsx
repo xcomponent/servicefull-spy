@@ -16,7 +16,7 @@ import {
   subscribeAllStateMachinesAction,
   updateGraphic,
 } from "../actions/components";
-import { Box, Diagram } from "grommet";
+import { Box } from "grommet";
 import { showStateMachineProperties } from "../actions/stateMachineProperties";
 import { showTransitionProperties } from "../actions/transitionProperties";
 
@@ -58,7 +58,7 @@ interface ComponentsCallbackProps {
 
 const mapStateToProps = (state: XCSpyState, ownProps: any): ComponentsProps => {
   const urlSearchParams = new URLSearchParams(ownProps.location.search);
-  const currentComponent = urlSearchParams.get(routes.params.currentComponent)!;
+  const currentComponent = urlSearchParams.get(routes.params.component)!;
   const componentProperties = state.components.componentProperties;
   const diagram = !state.components.initialized
     ? null

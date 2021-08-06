@@ -73,7 +73,7 @@ const mapStateToProps = (
   const active = state.transitionProperties.active;
   const id = state.transitionProperties.id;
   const componentProperties = state.components.componentProperties;
-  const currentComponent = urlSearchParams.get(routes.params.currentComponent);
+  const currentComponent = urlSearchParams.get(routes.params.component);
   const stateMachine = state.transitionProperties.stateMachine!;
   const instances = !active
     ? {}

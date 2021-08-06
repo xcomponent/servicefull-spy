@@ -46,7 +46,7 @@ const mapStateToProps = (
   const id = state.stateMachineProperties.id!;
   const active = state.stateMachineProperties.active;
   const componentProperties = state.components.componentProperties;
-  const currentComponent = urlSearchParams.get(routes.params.currentComponent)!;
+  const currentComponent = urlSearchParams.get(routes.params.component)!;
   const stateMachine = state.stateMachineProperties.stateMachine!;
   const instances = !active
     ? {}

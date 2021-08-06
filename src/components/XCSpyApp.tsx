@@ -2,21 +2,25 @@ import { connect } from "react-redux";
 import * as React from "react";
 import { routes } from "../utils/routes";
 import { XCSpyState } from "../reducers/spyReducer";
-import { Box, Button, Grid, Header, Layer, Main, Text } from "grommet";
-import SpySideBar from "./SpySideBar";
+import { Box, Header, Main, Sidebar } from "grommet";
 import Components from "./Components";
 import StateMachineProperties from "./StateMachineProperties";
 import TransitionProperties from "./TransitionProperties";
 import { setCompositionModel } from "../actions/compositionModel";
 import { initSession } from "../actions/session";
 import AppHeader from "./AppHeader";
+import { buildUrl } from "./Configuration";
 
-interface XCSpyAppGlobalProps extends XCSpyAppProps, XCSpyAppCallbackProps {}
+interface XCSpyAppGlobalProps extends XCSpyAppProps, XCSpyAppCallbackProps {
+  isFullSizeMenu: boolean;
+}
 
 interface XCSpyAppProps {
   initialized: boolean;
   api: string;
-  serverUrl: string;
+  host: string;
+  port: number;
+  secure: boolean;
   currentComponent: string;
 }
 
@@ -28,7 +32,11 @@ interface XCSpyAppCallbackProps {
 class XCSpyApp extends React.Component<XCSpyAppGlobalProps, XCSpyState> {
   componentWillMount() {
     if (!this.props.initialized) {
-      const serverUrl = this.props.serverUrl;
+      const serverUrl = buildUrl(
+        this.props.host,
+        this.props.port,
+        this.props.secure
+      );
       const api = this.props.api;
       this.props.initSession(api, serverUrl);
       this.props.setCompositionModel(api, serverUrl);
@@ -63,37 +71,40 @@ class XCSpyApp extends React.Component<XCSpyAppGlobalProps, XCSpyState> {
     // );
 
     return (
-      <Box direction={"row"} fill margin="auto" width={{ max: "xxlarge" }}>
-        <SpySideBar />
-        <Box flex overflow="auto">
-          <Box height={{ min: "100%" }}>
+      <Box direction={"row"} fill margin="auto">
+        {this.props.isFullSizeMenu && (
+          <Sidebar
+            flex={false}
+            height={{ min: "100%" }}
+            pad="small"
+            gap="large"
+            background="brand"
+            border={{ color: "border", style: "solid" }}
+            style={{ width: 240 }}
+          >
+            {"Components"}
+            {/* <Nav gap="small">{this.getComponentList()}</Nav> */}
+          </Sidebar>
+        )}
+        <Box flex overflow="auto" height="100%">
+          <Main fill={undefined} flex={false} height="100%">
             <Header
               background="background-front"
               fill="horizontal"
-              pad="small"
-              border={{ color: "border", style: "dashed" }}
               height="xxsmall"
             >
               <AppHeader />
             </Header>
-            <Main
-              fill={undefined}
-              flex={false}
-              pad="small"
-              border={{ color: "border", style: "dashed" }}
-              height="xlarge"
-            >
-              <Box fill={true} direction="column">
-                <Components />
-                <Box>
-                  <StateMachineProperties />
-                </Box>
-                <Box>
-                  <TransitionProperties />
-                </Box>
+            <Box fill={true} direction="column">
+              <Components />
+              <Box>
+                <StateMachineProperties />
               </Box>
-            </Main>
-          </Box>
+              <Box>
+                <TransitionProperties />
+              </Box>
+            </Box>
+          </Main>
         </Box>
       </Box>
     );
@@ -112,8 +123,10 @@ const mapStateToProps = (state: XCSpyState, ownProps: any): XCSpyAppProps => {
   return {
     initialized: state.compositionModel.initialized,
     api: values[routes.params.api],
-    serverUrl: values[routes.params.serverUrl],
-    currentComponent: values[routes.params.currentComponent],
+    host: values[routes.params.host],
+    port: parseInt(values[routes.params.port]),
+    secure: values[routes.params.secure] === "true",
+    currentComponent: values[routes.params.component],
   };
 };
 

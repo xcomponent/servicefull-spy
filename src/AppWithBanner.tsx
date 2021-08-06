@@ -6,12 +6,13 @@ import { config, ProductVersion } from "./settings";
 
 const AppWithBanner = ({ history }: { history: History }) => {
   const x4buiRef = useRef<HTMLX4bUiElement>();
-  // const [isFullSizeMenu, setIsFullSizeMenu] = useState(true);
+  const [isFullSizeMenu, setIsFullSizeMenu] = useState(true);
   const [isBannerInitialized, setIsBannerInitialized] = useState(false);
   const [lang, setLang] = useState(getCurrentLanguage());
 
   useEffect(() => {
-    // const handleMenuButtonToggled = (e: CustomEvent<boolean>) => setIsFullSizeMenu(e.detail);
+    const handleMenuButtonToggled = (e: Event) =>
+      setIsFullSizeMenu((e as CustomEvent).detail);
     const handleLanguageSelected = (e: Event) =>
       setLang((e as CustomEvent).detail);
     const handleStartupFinished = () => {
@@ -24,15 +25,21 @@ const AppWithBanner = ({ history }: { history: History }) => {
       "languageSelected",
       handleLanguageSelected
     );
-    // x4buiRef?.current?.addEventListener('menuToggleButtonClicked', handleMenuButtonToggled);
+    x4buiRef?.current?.addEventListener(
+      "menuToggleButtonClicked",
+      handleMenuButtonToggled
+    );
     currentX4B?.addEventListener("startupFinished", handleStartupFinished);
     currentX4B?.addEventListener("tokenRefreshed", handleTokenRefreshed);
     return () => {
-      x4buiRef?.current?.removeEventListener(
+      currentX4B?.removeEventListener(
         "languageSelected",
         handleLanguageSelected
       );
-      // x4buiRef?.current?.removeEventListener('menuToggleButtonClicked', handleMenuButtonToggled);
+      currentX4B?.removeEventListener(
+        "menuToggleButtonClicked",
+        handleMenuButtonToggled
+      );
       currentX4B?.removeEventListener("startupFinished", handleStartupFinished);
       currentX4B?.removeEventListener("tokenRefreshed", handleTokenRefreshed);
     };
@@ -49,7 +56,9 @@ const AppWithBanner = ({ history }: { history: History }) => {
       color={"#9E3218"}
       notification-count={0}
     >
-      {isBannerInitialized && <App lang={lang} />}
+      {isBannerInitialized && (
+        <App lang={lang} isFullSizeMenu={isFullSizeMenu} />
+      )}
     </x4b-ui>
   );
 };

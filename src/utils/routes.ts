@@ -2,11 +2,12 @@ export const routes = {
   paths: {
     home: "/",
     app: "/app",
-    form: "/form",
   },
   params: {
-    currentComponent: "currentComponent",
-    serverUrl: "serverUrl",
+    component: "component",
+    host: "host",
+    port: "port",
+    secure: "secure",
     api: "api",
   },
 };
