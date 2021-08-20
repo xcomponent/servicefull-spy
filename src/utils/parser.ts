@@ -37,7 +37,7 @@ export class Parser {
   private componentGraphicalModel: ComponentGraphicalModel;
 
   private componentName: string = "";
-  private finalStates: Array<String> = [];
+  private finalStates: Array<string> = [];
   private entryPointState: string = "";
   private entryPointStateMachine: string = "";
   private stateMachineNames: Array<string> = [];
@@ -295,7 +295,7 @@ export class Parser {
     return this.locations[id].x + " " + this.locations[id].y;
   }
 
-  private setFinalStates(): Array<String> {
+  private setFinalStates(): Array<string> {
     const finalStates = [];
     for (let id in this.states) {
       if (this.states[id].isFinal) {
@@ -464,7 +464,7 @@ export class Parser {
     this.stateMachineNames = stateMachineNames;
   }
 
-  public getFinalStates(): Array<String> {
+  public getFinalStates(): Array<string> {
     return this.finalStates;
   }
 

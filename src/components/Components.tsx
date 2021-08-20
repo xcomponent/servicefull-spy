@@ -6,8 +6,6 @@ import * as go from "../gojs/go";
 import { backgroundColor } from "../utils/graphicColors";
 import { XCSpyState } from "../reducers/spyReducer";
 import { ComponentProperties } from "../reducers/components";
-import { withRouter } from "react-router-dom";
-import { routes } from "../utils/routes";
 import { StateMachineInstance, CompositionModel } from "reactivexcomponent.js";
 import {
   clearFinalStates,
@@ -19,15 +17,17 @@ import {
 import { Box } from "grommet";
 import { showStateMachineProperties } from "../actions/stateMachineProperties";
 import { showTransitionProperties } from "../actions/transitionProperties";
+import { Component } from "reactivexcomponent.js/dist/communication/xcomponentMessages";
 
-interface ComponentsGlobalProps
-  extends ComponentsProps,
-    ComponentsCallbackProps {}
+type ComponentsGlobalProps = ComponentsProps & ComponentsCallbackProps;
 
-interface ComponentsProps {
-  currentComponent: string;
+interface ComponentsProps extends ComponentsOwnProps {
   diagram: go.Diagram | null;
   compositionModel: CompositionModel | undefined;
+}
+
+interface ComponentsOwnProps {
+  component: Component;
 }
 
 interface ComponentsCallbackProps {
@@ -56,15 +56,18 @@ interface ComponentsCallbackProps {
   snapshotEntryPoint: (component: string, entryPoint: string) => void;
 }
 
-const mapStateToProps = (state: XCSpyState, ownProps: any): ComponentsProps => {
-  const urlSearchParams = new URLSearchParams(ownProps.location.search);
-  const currentComponent = urlSearchParams.get(routes.params.component)!;
+const mapStateToProps = (
+  state: XCSpyState,
+  ownProps: ComponentsOwnProps
+): ComponentsProps => {
   const componentProperties = state.components.componentProperties;
+
+  console.error(componentProperties[ownProps.component.name]);
   const diagram = !state.components.initialized
     ? null
-    : componentProperties[currentComponent].diagram;
+    : componentProperties[ownProps.component.name].diagram;
   return {
-    currentComponent,
+    component: ownProps.component,
     diagram,
     compositionModel: state.compositionModel.value,
   };
@@ -129,7 +132,6 @@ const mapDispatchToProps = (dispatch: any): ComponentsCallbackProps => {
 class Components extends React.Component<ComponentsGlobalProps, XCSpyState> {
   constructor(props: ComponentsGlobalProps) {
     super(props);
-    this.getContainersForGraphs = this.getContainersForGraphs.bind(this);
     this.addDiagramEventClick = this.addDiagramEventClick.bind(this);
   }
 
@@ -141,14 +143,11 @@ class Components extends React.Component<ComponentsGlobalProps, XCSpyState> {
         const data = diagramEvent.subject.part.data;
         if (data.isGroup) {
           // it is a stateMachine
-          props.showStateMachineProperties(
-            this.props.currentComponent,
-            data.key
-          );
+          props.showStateMachineProperties(this.props.component.name, data.key);
         } else if (data.stateMachineTarget) {
           // it is a transition
           props.showTransitionProperties(
-            this.props.currentComponent,
+            this.props.component.name,
             data.stateMachineTarget,
             data.messageType,
             "{}"
@@ -201,37 +200,23 @@ class Components extends React.Component<ComponentsGlobalProps, XCSpyState> {
     }
   }
 
-  getContainersForGraphs() {
-    const props = this.props;
-    let visibility;
-    if (props.compositionModel) {
-      const divs = props.compositionModel.components.map((component) => {
-        visibility =
-          component.name === props.currentComponent ? "block" : "none";
-        return (
-          <div
-            key={component.name}
-            id={component.name}
-            style={{
-              height: "100%",
-              width: "100%",
-              display: visibility,
-              backgroundColor: backgroundColor,
-            }}
-          ></div>
-        );
-      });
-
-      return divs;
-    }
-    return [];
-  }
-
   render() {
-    return <Box fill={true}>{this.getContainersForGraphs()}</Box>;
+    return (
+      <Box fill={true}>
+        <div
+          key={this.props.component.name}
+          id={this.props.component.name}
+          style={{
+            height: "100%",
+            width: "100%",
+            backgroundColor: backgroundColor,
+          }}
+        >
+          Test
+        </div>
+      </Box>
+    );
   }
 }
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(Components)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(Components);

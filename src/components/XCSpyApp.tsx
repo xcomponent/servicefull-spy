@@ -96,7 +96,7 @@ class XCSpyApp extends React.Component<XCSpyAppGlobalProps, XCSpyState> {
               <AppHeader />
             </Header>
             <Box fill={true} direction="column">
-              <Components />
+              {/* <Components /> */}
               <Box>
                 <StateMachineProperties />
               </Box>

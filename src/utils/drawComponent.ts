@@ -126,21 +126,28 @@ export class DrawComponent {
     const groupTemplate = go.GraphObject.make(
       go.Group,
       "Auto",
-      go.GraphObject.make(go.Shape, "Rectangle", { fill: stateMachineColor }),
+      go.GraphObject.make(go.Shape, "Rectangle", {
+        strokeWidth: 0,
+        fill: stateMachineColor,
+      }),
       go.GraphObject.make(
         go.Panel,
         "Vertical",
         {
-          margin: 5,
+          margin: 20,
           defaultAlignment: go.Spot.Center,
         },
         go.GraphObject.make(
           go.TextBlock,
-          { alignment: go.Spot.Center, font: "Bold 12pt Sans-Serif" },
+          {
+            stroke: "white",
+            margin: new go.Margin(0, 0, 30, 0),
+            alignment: go.Spot.Center,
+          },
           new go.Binding("text", "text")
         ),
         go.GraphObject.make(go.Placeholder),
-        { padding: 5 }
+        { padding: 0 }
       )
     );
     return groupTemplate;

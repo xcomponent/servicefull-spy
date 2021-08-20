@@ -9,8 +9,8 @@ import { getLocalizedResources } from "./locales/localeConfiguration";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { routes } from "./utils/routes";
 // import XCSpyMainPage from "./components/XCSpyMainPage";
-import XCSpyApp from "./components/XCSpyApp";
 import Configuration from "./components/Configuration";
+import MainScreen from "./components/MainScreen";
 
 const middleware = applyMiddleware(thunk, logger);
 const store = createStore(RootReducer, middleware);
@@ -78,7 +78,7 @@ function App({ lang, isFullSizeMenu }: AppProps) {
               <Route
                 path={routes.paths.app}
                 render={(props) => (
-                  <XCSpyApp isFullSizeMenu={isFullSizeMenu} {...props} />
+                  <MainScreen isFullSizeMenu={isFullSizeMenu} {...props} />
                 )}
               />
             </Switch>

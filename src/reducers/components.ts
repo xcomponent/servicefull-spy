@@ -23,7 +23,7 @@ export interface Instance {
 
 export interface ComponentProperties {
   diagram: go.Diagram;
-  stateMachineProperties: { [name: string]: { [id: number]: Instance } };
+  stateMachineProperties: { [name: string]: { [id: string]: Instance } };
   finalStates: string[];
   entryPointState: string;
 }

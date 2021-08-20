@@ -519,7 +519,7 @@ declare namespace go {
         defaultTool: Tool;
 
         /**Gets or sets the Diagram's HTMLDivElement, via an HTML Element ID.*/
-        div: HTMLDivElement;
+        div: HTMLDivElement | null;
 
         /**This read-only property returns the model-coordinate bounds of the Diagram.*/
         documentBounds: Rect;
